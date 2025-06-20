@@ -13,6 +13,8 @@
   border-radius: 15px;
   background-color: #1e1e1e;
   box-shadow: 0 0 10px rgba(255, 165, 0, 0.4);
+  position: relative;
+  overflow: hidden;
 }
 
 .input {
@@ -60,7 +62,7 @@
   position: absolute;
   /* display: none; */
   width: 329px;
-  height: 291px;
+  height: 280px;
   margin-left: -19px;
   overflow-y: auto;
   background-color: #121212;
@@ -69,12 +71,13 @@
   box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
   animation: slideDown 0.3s ease-out;
 }
-  
+
 @keyframes slideDown {
   from {
-    transform: translateY(-10%);
+    transform: translateY(+50%);
     opacity: 0;
   }
+
   to {
     transform: translateY(0);
     opacity: 1;
@@ -114,7 +117,7 @@
   align-items: center;
   margin-bottom: 0;
   padding-left: 140px;
-  border-bottom: 1px solid #555;   
+  border-bottom: 1px solid #555;
 }
 
 .history-close {
@@ -141,6 +144,6 @@
   float: right;
   transition: background-color 0.3s ease;
   position: absolute;
-  right: 0; 
+  right: 0;
   bottom: 0;
 }
