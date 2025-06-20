@@ -75,7 +75,7 @@ function Calculator() {
   useEffect(() => {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  }, [input]);
 
   const buttons = [
     "7", "8", "9", "/",
