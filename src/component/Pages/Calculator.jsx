@@ -9,42 +9,33 @@ function Calculator() {
   const [input, setInput] = useState("0");
   const [history, setHistory] = useState([]);
   const [showHistory, setShowHistory] = useState(false);
+  const [lastOperation, setLastOperation] = useState(null);
 
   const handleClick = (value) => {
     const operators = "+-*/.";
 
-    // Prevent multiple leading zeros like "00"
     if (input === "0" && value === "0") return;
 
-    // If input is "0"
+    if (input === "0" && operators.includes(value) && value !== "-") return;
+
     if (input === "0") {
       if (value === ".") {
         setInput("0.");
-      } else if (operators.includes(value)) {
-        setInput("0" + value);
-      } else {
+      } else if (!operators.includes(value)) {
         setInput(value);
+      } else {
+        setInput("0" + value);
       }
       return;
     }
 
     const lastChar = input.slice(-1);
-
-    // Prevent multiple dots in a number segment
-    if (value === ".") {
-      const parts = input.split(/[\+\-\*\/]/);
-      const lastPart = parts[parts.length - 1];
-      if (lastPart.includes(".")) return;
-    }
-
-    // Replace last operator with the new one if two in a row
-    if (operators.includes(lastChar) && operators.includes(value) && value !== ".") {
+    if (operators.includes(lastChar) && operators.includes(value)) {
       setInput((prev) => prev.slice(0, -1) + value);
     } else {
       setInput((prev) => prev + value);
     }
   };
-
 
   const handleClear = () => {
     setInput("0");
@@ -59,14 +50,28 @@ function Calculator() {
   };
 
   const handleEqual = () => {
-    try {
-      const result = eval(input).toString();
-      setHistory((prev) => [...prev, `${input} = ${result}`]);
-      setInput(result);
-    } catch {
-      setInput("Error");
+  try {
+    let expression = input;
+ 
+    // If equals is pressed again, repeat the last operation
+    if (lastOperation && !/[+\-*/]/.test(input)) {
+      expression = input + lastOperation;
     }
-  };
+ 
+    const result = eval(expression).toString();
+ 
+    // Extract last operation for repeated equals
+    const match = expression.match(/([+\-*/])\s*([\d.]+)\s*$/);
+    if (match) {
+      setLastOperation(match[0]); // e.g., "+2"
+    }
+ 
+    setHistory((prev) => [...prev, `${input} = ${result}`]);
+    setInput(result);
+  } catch {
+    setInput("Error");
+  }
+};
 
   const handleKeyDown = (e) => {
     const { key } = e;
@@ -85,7 +90,7 @@ function Calculator() {
   useEffect(() => {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [input]);
+  }, []);
 
   const buttons = [
     "7", "8", "9", "/",
